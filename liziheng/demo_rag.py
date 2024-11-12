@@ -1,6 +1,6 @@
 import os
 from langchain_community.document_loaders import DirectoryLoader
-from langchain_community.document_loaders import UnstructuredFileLoader
+from langchain_unstructured import UnstructuredLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_chroma import Chroma
@@ -13,8 +13,8 @@ import jsonlines
 import json
 
 def load_documents(directory="/hy-tmp/project/WWW2025/liziheng/documents"):
-    loader = DirectoryLoader(directory)
-    # loader = UnstructuredFileLoader(directory)
+    # loader = DirectoryLoader(directory)
+    loader = UnstructuredLoader(directory)
     documents = loader.load()
     text_splitter = CharacterTextSplitter(chunk_size=512, chunk_overlap=32)
     split_docs = text_splitter.split_documents(documents)
@@ -42,12 +42,6 @@ def read_jsonl(path): #加载问题
 
 
 
-# while True:
-#     query = input("请输入：")
-#     if query.lower() == "exit":
-#         break
-#     resp = qa.invoke(query)['result'].replace('\\n', '\n')
-#     print(resp)
 
 if __name__ == "__main__":
     
@@ -76,7 +70,7 @@ if __name__ == "__main__":
     )
     
     
-    query = "小明喜欢吃什么水果"
+    query = "坚持“四个面向”的原则，自2019年试运行以来，围绕冬奥赛事、能源电力、剩下的是什么"
     resp = qa.invoke(query)['result'].replace('\\n', '\n')
     print(resp)
     
