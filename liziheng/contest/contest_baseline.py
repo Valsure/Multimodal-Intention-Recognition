@@ -41,19 +41,17 @@ async def batch_predict(request: BatchRequest):
         messages = [
             {'role': 'system', 'content': 'You are a helpful assistant.'},
             {'role': 'user', 'content': [
-                {'type': 'image', 'image': os.path.join(request.image_folder, item.image[0]), 'max_pixels': 12845056},
+                {'type': 'image', 'image': os.path.join(request.image_folder, item.image[0])},
                 {'type': 'text', 'text': item.instruction},
             ]},
         ]
 
         prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        image_inputs, video_inputs = process_vision_info(messages)
+        image_inputs, _ = process_vision_info(messages)
 
         mm_data = {}
         if image_inputs is not None:
             mm_data['image'] = image_inputs
-        if video_inputs is not None:
-            mm_data['video'] = video_inputs
 
         sampling_params = SamplingParams(
             temperature=0.1, top_p=0.001, repetition_penalty=1.05, max_tokens=256, stop_token_ids=[]
