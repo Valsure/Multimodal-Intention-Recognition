@@ -22,7 +22,7 @@ processor = AutoProcessor.from_pretrained(MODEL_PATH)
 # Define request schema
 class GenerateRequest(BaseModel):
     id: str
-    image: str
+    image: list[str]
     instruction: str
     image_folder: str
 
@@ -36,13 +36,35 @@ class PredictionResult(BaseModel):
 
 @app.post("/single_predict", response_model=PredictionResult)
 def singe_predict(request: GenerateRequest):
-    message = [
-        {'role':'system', 'content':'You are a helpful assistant.'},
-        {'role':'user', 'content':[
-            {'type': 'image', 'image':os.path.join(request.image_folder, request.image)},
-            {'type': 'text', 'text': request.instruction}
-        ]}
-    ]
+    if not len(request.image):
+        return PredictionResult(id = request.id, predict = "没有图片")
+    if len(request.image) == 1:
+        message = [
+            {'role':'system', 'content':'You are a helpful assistant.'},
+            {'role':'user', 'content':[
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[0])},
+                {'type': 'text', 'text': request.instruction}
+            ]}
+        ]
+    elif len(request.image) == 2:
+        message = [
+            {'role':'system', 'content':'You are a helpful assistant.'},
+            {'role':'user', 'content':[
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[0])},
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[1])},
+                {'type': 'text', 'text': request.instruction}
+            ]}
+        ]
+    elif len(request.image) == 3:
+        message = [
+            {'role':'system', 'content':'You are a helpful assistant.'},
+            {'role':'user', 'content':[
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[0])},
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[1])},
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[2])},
+                {'type': 'text', 'text': request.instruction}
+            ]}
+        ]
     prompt = processor.apply_chat_template(message, tokenize = False, add_generation_prompt = True)
     image_inputs ,_ = process_vision_info(message)
     mm_data = {}

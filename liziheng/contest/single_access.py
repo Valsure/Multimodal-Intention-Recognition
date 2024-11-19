@@ -21,7 +21,7 @@ def process_single_task(input_path ,output_path):
             request_data = {
                 "id": item["id"],
                 "instruction": item["instruction"],
-                "image": item["image"][0],
+                "image": item["image"],
                 "image_folder": image_folder
             }
             try:
