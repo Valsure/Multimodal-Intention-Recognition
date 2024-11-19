@@ -9,7 +9,6 @@ app = FastAPI()
 
 MODEL_PATH = os.path.expanduser("~/.cache/huggingface/hub/models--Qwen--Qwen2-VL-7B-Instruct/snapshots/51c47430f97dd7c74aa1fa6825e68a813478097f")
 
-# Initialize model
 llm = LLM(
     model=MODEL_PATH,
     limit_mm_per_prompt={'image': 10, 'video': 10},
@@ -18,18 +17,16 @@ llm = LLM(
 
 processor = AutoProcessor.from_pretrained(MODEL_PATH)
 
-# Define request schema
 class GenerateRequest(BaseModel):
     image_path: str
-    text_prompt: str = "描述一下图片"
+    text_prompt: str 
 
-# Define response schema
 class GenerateResponse(BaseModel):
     generated_text: str
 
+
 @app.post("/generate", response_model=GenerateResponse)
 async def generate_text(request: GenerateRequest):
-    # Prepare prompt and inputs for the model
     messages = [
         {'role': 'system', 'content': 'You are a helpful assistant.'},
         {'role': 'user', 'content': [
