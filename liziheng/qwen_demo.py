@@ -35,15 +35,6 @@ inputs = processor(
 )
 inputs = inputs.to("cuda")
 
-# 记录显存分配情况
-def print_memory_usage():
-    allocated = torch.cuda.memory_allocated() / (1024 ** 2)
-    reserved = torch.cuda.memory_allocated() / (1024 ** 2)
-    print(f"Allocated Memory: {allocated:.2f} MB")
-    print(f"Reserved Memory: {reserved:.2f} MB")
-
-print("Before inference:")
-print_memory_usage()
 
 # 生成推理结果
 generated_ids = model.generate(**inputs, max_new_tokens=128)
@@ -55,5 +46,5 @@ output_text = processor.batch_decode(
 )
 print(output_text)
 
-print("After inference:")
-print_memory_usage()
+
+

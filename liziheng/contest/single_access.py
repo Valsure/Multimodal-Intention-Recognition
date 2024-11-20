@@ -1,10 +1,16 @@
 import requests
 import csv
 import json
+import re
 
 request_url = "http://127.0.0.1:8005/single_predict"
-input_path = "/hy-tmp/project/WWW2025/datasets/test_mini/test_mini.json"
+# input_path = "/hy-tmp/project/WWW2025/datasets/test_mini/test_mini.json"
+input_path = "/hy-tmp/project/WWW2025/datasets/test1/test1.json"
 output_path = "/hy-tmp/project/WWW2025/datasets/prediction.csv"
+
+def strip_quotes(s):
+    # 使用正则表达式去掉字符串首尾的引号
+    return re.sub(r'^[\'"]+|[\'"]+$', '', s)
 
 def process_single_task(input_path ,output_path):
     with open(input_path, "r", encoding = "utf-8" ) as input_file:
@@ -17,7 +23,7 @@ def process_single_task(input_path ,output_path):
         if csv_file.tell() == 0:
             writer.writerow(["id", "predict"])
         
-        for item in json_file["items"]:
+        for item in json_file["items"][5394:]:
             request_data = {
                 "id": item["id"],
                 "instruction": item["instruction"],
@@ -35,7 +41,7 @@ def process_single_task(input_path ,output_path):
                     cleaned_predict = cleaned_predict[3:-3]
                 elif cleaned_predict.startswith('"') and cleaned_predict.endswith('"'):
                     cleaned_predict = cleaned_predict[1:-1]
-                writer.writerow([item['id'], cleaned_predict])
+                writer.writerow([item['id'], strip_quotes(cleaned_predict)])
                 
                 print(f"完成: {item['id']}")
             except requests.exceptions.HTTPError as http_err:
@@ -44,5 +50,6 @@ def process_single_task(input_path ,output_path):
                 print(f"JSON decode error: {json_err}")
             except Exception as e:
                 print(f"Request failed for {item['id']}: {e}")
+        print("done")
 if __name__ == "__main__":
     process_single_task(input_path, output_path)

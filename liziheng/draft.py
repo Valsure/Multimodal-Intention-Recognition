@@ -56,6 +56,6 @@ llm_inputs = {
 }
  
 outputs = llm.generate([llm_inputs], sampling_params=sampling_params)
-generated_text = outputs[0]
+generated_text = outputs[0].outputs[0].text
  
 print(generated_text)
