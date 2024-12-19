@@ -8,7 +8,7 @@ import json
 
 app = FastAPI()
 
-MODEL_PATH = os.path.expanduser("~/.cache/huggingface/hub/models--Qwen--Qwen2-VL-7B-Instruct/snapshots/51c47430f97dd7c74aa1fa6825e68a813478097f")
+MODEL_PATH = os.path.expanduser("/hy-tmp/project/WWW2025/models/qwen2_by_liziheng")
 
 # Initialize model
 llm = LLM(
@@ -17,7 +17,7 @@ llm = LLM(
     tensor_parallel_size=2
 )
 
-processor = AutoProcessor.from_pretrained(MODEL_PATH)
+processor = AutoProcessor.from_pretrained(MODEL_PATH, max_pixels = 1024 * 28 * 28)
 
 # Define request schema
 class GenerateRequest(BaseModel):

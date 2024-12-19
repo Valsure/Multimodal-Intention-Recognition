@@ -9,18 +9,12 @@ import json
 
 app = FastAPI()
 
-MODEL_PATH = os.path.expanduser("~/.cache/huggingface/hub/models--Qwen--Qwen2-VL-7B-Instruct/snapshots/51c47430f97dd7c74aa1fa6825e68a813478097f")
+MODEL_PATH = os.path.expanduser("/hy-tmp/project/WWW2025/models/qwen2_freeze_adapter_liziheng")
 
-# Initialize model
-# llm = LLM(
-#     model=MODEL_PATH,
-#     limit_mm_per_prompt={'image': 10, 'video': 10},
-#     tensor_parallel_size=2
-# )
 
 llm = Qwen2VLForConditionalGeneration.from_pretrained(MODEL_PATH, torch_dtype="auto", device_map="auto")
 
-processor = AutoProcessor.from_pretrained(MODEL_PATH)
+processor = AutoProcessor.from_pretrained(MODEL_PATH, max_pixels = 1024 * 28 * 28)
 
 # Define request schema
 class GenerateRequest(BaseModel):
@@ -64,7 +58,7 @@ def singe_predict(request: GenerateRequest):
             {'role':'user', 'content':[
                 {'type': 'image', 'image':os.path.join(request.image_folder, request.image[0])},
                 {'type': 'image', 'image':os.path.join(request.image_folder, request.image[1])},
-                # {'type': 'image', 'image':os.path.join(request.image_folder, request.image[2])},
+                {'type': 'image', 'image':os.path.join(request.image_folder, request.image[2])},
                 {'type': 'text', 'text': request.instruction}
             ]}
         ]

@@ -5,8 +5,8 @@ import re
 
 request_url = "http://127.0.0.1:8005/single_predict"
 # input_path = "/hy-tmp/project/WWW2025/datasets/test_mini/test_mini.json"
-input_path = "/hy-tmp/project/WWW2025/datasets/test1/test1.json"
-output_path = "/hy-tmp/project/WWW2025/datasets/prediction.csv"
+input_path = "/hy-tmp/project/WWW2025/datasets/test1/test_with_abs_path.json"
+output_path = "/hy-tmp/project/WWW2025/datasets/prediction_1.csv"
 
 def strip_quotes(s):
     # 使用正则表达式去掉字符串首尾的引号
@@ -15,7 +15,8 @@ def strip_quotes(s):
 def process_single_task(input_path ,output_path):
     with open(input_path, "r", encoding = "utf-8" ) as input_file:
         json_file = json.load(input_file)
-        image_folder = json_file["image_folder"]
+        # image_folder = json_file["image_folder"]
+        image_folder = " "
     
     with open(output_path, "a", encoding="utf-8", newline="") as csv_file:
         writer = csv.writer(csv_file)
@@ -23,7 +24,7 @@ def process_single_task(input_path ,output_path):
         if csv_file.tell() == 0:
             writer.writerow(["id", "predict"])
         
-        for item in json_file["items"][5394:]:
+        for item in json_file["items"]:
             request_data = {
                 "id": item["id"],
                 "instruction": item["instruction"],

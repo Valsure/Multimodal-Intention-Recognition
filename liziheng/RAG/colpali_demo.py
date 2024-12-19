@@ -21,8 +21,8 @@ def main():
     print(f"Device used: {device}")
 
     # Model name
-    model_name = "vidore/colpali-v1.2"
-
+    # model_name = "vidore/colpali-v1.2"
+    model_name = "/root/.cache/huggingface/hub/models--vidore--colpali-v1.2/snapshots/fe2e8900a38a5891530bd08f7c0407471042096d"
     # Load model
     model = ColPali.from_pretrained(
         model_name,
